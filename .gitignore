@@ -1,0 +1,17 @@
+# Backend build output and local secrets
+backend/target/
+backend/.env
+
+# IDEs and local tooling
+.claude/
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
