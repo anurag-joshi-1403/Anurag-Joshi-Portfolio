@@ -1,0 +1,119 @@
+.form {
+  composes: glass from global;
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+}
+
+.note {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Label sits closer to its input than fields sit to each other. */
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field label {
+  font-weight: 600;
+}
+
+/* Translucent fields with an outline that keeps 3:1 against the glass. */
+.field input,
+.field textarea {
+  width: 100%;
+  min-height: 3rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--glass-tint);
+  font-size: 1rem; /* 16px or more stops iOS zooming in on focus */
+  transition: border-color var(--duration-fast), background-color var(--duration-fast);
+}
+
+.field input:focus,
+.field textarea:focus {
+  background-color: var(--glass-bg-solid);
+}
+
+.field textarea {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+.field [aria-invalid='true'] {
+  border-color: var(--color-danger);
+  border-width: 2px;
+}
+
+.fieldError,
+.sent,
+.failed {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.fieldError {
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.fieldError svg,
+.sent svg,
+.failed svg {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-block-start: 0.2em;
+}
+
+.status:not(:empty) {
+  margin-block-start: var(--space-4);
+}
+
+.sent,
+.failed {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid currentColor;
+  background-color: var(--glass-tint);
+  font-weight: 500;
+}
+
+.sent {
+  color: var(--color-success);
+}
+
+.failed {
+  color: var(--color-danger);
+}
+
+.failed a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    animation: spin 0.9s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+@media (max-width: 30rem) {
+  .form {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .form button[type='submit'] {
+    width: 100%;
+  }
+}

@@ -1,9 +1,5 @@
 .section {
-  padding-block: var(--space-16);
-}
-
-.section + .section {
-  border-top: 1px solid var(--color-border);
+  padding-block: var(--space-12);
 }
 
 .title {
@@ -12,8 +8,19 @@
   margin-bottom: var(--space-8);
 }
 
+/* A short gradient bar under each section title (decorative). */
+.title::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 0.25rem;
+  margin-top: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--gradient-primary);
+}
+
 @media (min-width: 64rem) {
   .section {
-    padding-block: var(--space-24);
+    padding-block: var(--space-16);
   }
 }

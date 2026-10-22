@@ -1,0 +1,71 @@
+/* Shared button look for <a> and <button> elements: compose `button` with `primary` or `secondary`. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-6);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast),
+    border-color var(--duration-fast),
+    box-shadow var(--duration-fast),
+    color var(--duration-fast);
+}
+
+.button svg {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* Gradient call to action with a soft glow. */
+.primary {
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.primary:hover {
+  background: var(--gradient-primary-hover);
+  color: var(--color-on-primary);
+}
+
+/* Translucent secondary button; the outline keeps 3:1 against the glass. */
+.secondary {
+  background-color: var(--glass-tint);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.secondary:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.button:disabled {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+/* A clearly-marked placeholder for an action whose data hasn't been supplied yet. */
+.pending {
+  border-style: dashed;
+  border-color: var(--color-border-strong);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  cursor: default;
+}
+
+/* High contrast mode drops the gradient: keep the primary button outlined. */
+@media (forced-colors: active) {
+  .primary {
+    border-color: ButtonText;
+  }
+}

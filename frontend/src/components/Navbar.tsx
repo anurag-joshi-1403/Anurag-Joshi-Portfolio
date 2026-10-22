@@ -1,23 +1,38 @@
 import { Menu, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react'
 import { useActiveSection } from '../hooks/useActiveSection'
 import styles from './Navbar.module.css'
+import { ThemeToggle } from './ThemeToggle'
 
-const NAV_ITEMS = [
+type NavItem = { id: string; label: string }
+
+const BEFORE_ACHIEVEMENTS: NavItem[] = [
   { id: 'about', label: 'About' },
   { id: 'skills', label: 'Skills' },
   { id: 'projects', label: 'Projects' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'contact', label: 'Contact' },
-] as const
+  { id: 'education', label: 'Education' },
+]
+const ACHIEVEMENTS: NavItem = { id: 'achievements', label: 'Achievements' }
+const CONTACT: NavItem = { id: 'contact', label: 'Contact' }
 
-const SECTION_IDS = NAV_ITEMS.map((item) => item.id)
+type NavbarProps = {
+  /** The owner's name once the profile has loaded. */
+  name: string | null
+  /** FR-ACH-1: only link to Achievements when that section is shown. */
+  showAchievements: boolean
+}
 
-export function Navbar() {
-  const activeId = useActiveSection(SECTION_IDS)
+export function Navbar({ name, showAchievements }: NavbarProps) {
+  const navItems = useMemo(
+    () => [...BEFORE_ACHIEVEMENTS, ...(showAchievements ? [ACHIEVEMENTS] : []), CONTACT],
+    [showAchievements],
+  )
+  const sectionIds = useMemo(() => navItems.map((item) => item.id), [navItems])
+  const activeId = useActiveSection(sectionIds)
   const [menuOpen, setMenuOpen] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLUListElement>(null)
 
   useEffect(() => {
     if (!menuOpen) return
@@ -45,27 +60,25 @@ export function Navbar() {
     }
   }, [menuOpen])
 
+  const toggleMenu = (event: MouseEvent<HTMLButtonElement>) => {
+    const opening = !menuOpen
+    setMenuOpen(opening)
+    // The links come before this button in the page order (so desktop tab order matches what's
+    // on screen). When the menu was opened from the keyboard (click detail 0), move focus into it.
+    if (opening && event.detail === 0) {
+      requestAnimationFrame(() => menuRef.current?.querySelector('a')?.focus())
+    }
+  }
+
   return (
     <header ref={headerRef} className={styles.header}>
       <nav className={`container ${styles.nav}`} aria-label="Primary">
         <a href="#home" className={styles.brand} onClick={() => setMenuOpen(false)}>
-          Anurag Joshi
+          {name ?? 'Home'}
         </a>
 
-        <button
-          ref={toggleRef}
-          type="button"
-          className={styles.toggle}
-          aria-expanded={menuOpen}
-          aria-controls="primary-menu"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-          <span className="visually-hidden">{menuOpen ? 'Close menu' : 'Open menu'}</span>
-        </button>
-
-        <ul id="primary-menu" className={styles.links} data-open={menuOpen}>
-          {NAV_ITEMS.map((item) => (
+        <ul ref={menuRef} id="primary-menu" className={styles.links} data-open={menuOpen}>
+          {navItems.map((item) => (
             <li key={item.id}>
               <a
                 href={`#${item.id}`}
@@ -78,6 +91,21 @@ export function Navbar() {
             </li>
           ))}
         </ul>
+
+        <div className={styles.actions}>
+          <ThemeToggle />
+          <button
+            ref={toggleRef}
+            type="button"
+            className={styles.toggle}
+            aria-expanded={menuOpen}
+            aria-controls="primary-menu"
+            onClick={toggleMenu}
+          >
+            {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+            <span className="visually-hidden">{menuOpen ? 'Close menu' : 'Open menu'}</span>
+          </button>
+        </div>
       </nav>
     </header>
   )

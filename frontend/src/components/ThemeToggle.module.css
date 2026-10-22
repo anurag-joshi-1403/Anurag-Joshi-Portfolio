@@ -1,0 +1,45 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: var(--glass-tint);
+  cursor: pointer;
+}
+
+.toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.whenLight,
+.whenDark {
+  display: inline-flex;
+}
+
+/* The rendered scheme is dark when the override says so, or when there's no
+   light override and the system prefers dark. display: none also removes the
+   hidden label from the accessibility tree. */
+.whenDark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(:root:not(:has(> head > meta[name='color-scheme'][content='light']))) .whenLight {
+    display: none;
+  }
+  :global(:root:not(:has(> head > meta[name='color-scheme'][content='light']))) .whenDark {
+    display: inline-flex;
+  }
+}
+
+:global(:root:has(> head > meta[name='color-scheme'][content='dark'])) .whenLight {
+  display: none;
+}
+:global(:root:has(> head > meta[name='color-scheme'][content='dark'])) .whenDark {
+  display: inline-flex;
+}

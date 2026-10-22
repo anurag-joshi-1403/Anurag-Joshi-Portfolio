@@ -1,14 +1,23 @@
 .footer {
-  border-top: 1px solid var(--color-border);
-  padding-block: var(--space-8);
+  padding: var(--space-8) var(--space-3) var(--space-6);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
 
 .inner {
+  composes: glass from global;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  padding-block: var(--space-2);
+  border-radius: var(--radius-lg);
+}
+
+/* A comfortable tap target (WCAG 2.5.8 asks for at least 24px). */
+.inner a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
 }
