@@ -8,7 +8,7 @@
 --
 -- NULL means "not supplied yet": the site shows it as pending instead of rendering a broken link.
 
--- Pending: email, resume_url, github_url, linkedin_url.
+-- Pending: resume_url.
 -- Draft wording to confirm: tagline, bio, interests, objective, location.
 INSERT INTO profile (name, title, tagline, bio, interests, objective, location, email, resume_url, github_url, linkedin_url)
 VALUES (
@@ -19,55 +19,73 @@ VALUES (
     'Backend design and clean REST APIs, and putting large language models to work in practical tools, which is where my Multi-Agent AI Platform and SocialSync projects come from.',
     'I''m looking for a full-time software developer role through campus placements, and I''m open to freelance web projects in the meantime.',
     'Lucknow, India',
+    'anuragjoshi1403@gmail.com',
     NULL,
-    NULL,
-    NULL,
-    NULL
+    'https://github.com/anurag-joshi-1403',
+    'https://www.linkedin.com/in/anurag-joshi-49749229a/'
 );
 
 -- Real skills only (FR-SKILLS-1). Display order: Languages, Backend, Frontend, Databases, Tools,
 -- then insertion order within a category.
 INSERT INTO skill (category, name) VALUES
     ('Languages', 'Java'),
-    ('Languages', 'TypeScript'),
     ('Languages', 'JavaScript'),
+    ('Languages', 'TypeScript'),
     ('Languages', 'SQL'),
     ('Backend', 'Spring Boot'),
+    ('Backend', 'Spring Security'),
     ('Backend', 'Spring Data JPA'),
-    ('Backend', 'REST API design'),
+    ('Backend', 'REST APIs'),
+    ('Backend', 'WebSocket (STOMP)'),
+    ('Backend', 'JWT'),
     ('Frontend', 'React'),
-    ('Frontend', 'HTML'),
-    ('Frontend', 'CSS'),
+    ('Frontend', 'Vite'),
+    ('Frontend', 'UI/UX'),
+    ('Databases', 'PostgreSQL'),
     ('Databases', 'MySQL'),
+    ('Databases', 'Redis'),
     ('Tools', 'Git'),
     ('Tools', 'GitHub'),
-    ('Tools', 'Maven');
+    ('Tools', 'Docker'),
+    ('Tools', 'GitHub Actions'),
+    ('Tools', 'Maven'),
+    ('Tools', 'Postman'),
+    ('Tools', 'Swagger/OpenAPI');
 
--- Pending for every project: github_url, live_url, image_url (screenshots from the real repositories).
+-- Details taken from each repository's README on GitHub. Pending: image_url (screenshots), and
+-- live_url wherever a project isn't deployed.
 INSERT INTO project (name, description, problem, tech_stack, image_url, github_url, live_url, featured) VALUES
     (
         'Multi-Agent AI Platform',
-        'A Spring Boot platform where specialised AI agents (coding, PDF, search, research, and a retrieval-augmented knowledge agent) each handle one kind of task behind a shared REST API.',
-        'A single general-purpose assistant handles code, documents, and research equally loosely. Routing each request to an agent built for that task gives more focused, more reliable answers.',
-        'Java, Spring Boot, REST APIs, LLM APIs, RAG',
-        NULL, NULL, NULL, TRUE
+        'A chat console for five specialised AI agents (coding, research, summarising, document Q&A, and general chat), backed by a Spring Boot API that fails over across five LLM providers. Each agent describes itself, so a new one appears in the console with no frontend changes.',
+        'One general-purpose chatbot treats code, research, and documents the same way. Focused agents give better answers, and provider failover keeps them answering when one AI service is down or rate-limited.',
+        'Java, Spring Boot, Spring AI, Spring Security, MongoDB, React, TypeScript, Vite',
+        NULL, 'https://github.com/anurag-joshi-1403/Multi-Agent-AI-Platform', NULL, TRUE
+    ),
+    (
+        'Student Management System',
+        'A Spring Boot MVC web app that runs a college''s daily administration (students, teachers, courses, attendance, exams, results, and fees) behind role-based logins for admins, teachers, and students, with 55 automated tests run by GitHub Actions.',
+        'Colleges still track admissions, attendance, and fees across spreadsheets and paper. This puts every record behind one login, with a live dashboard, PDF marksheets and receipts, and alerts for overdue fees and low attendance.',
+        'Java, Spring Boot, Spring Security, Spring Data JPA, MySQL, Thymeleaf, Bootstrap, JUnit 5, GitHub Actions',
+        NULL, 'https://github.com/anurag-joshi-1403/StudentManagementSystem', NULL, TRUE
     ),
     (
         'SocialSync',
-        'B.Tech major project, built in a team of four: a web app where creators and small businesses generate AI captions and hashtags, schedule or publish posts to several platforms, and review engagement in a calendar and dashboard.',
+        'B.Tech major project, built in a team of four: a web app where creators and small businesses generate captions with Google Gemini, schedule posts for Instagram, Facebook, X, and LinkedIn, and review engagement on a dashboard. Platform publishing is simulated.',
         'Small businesses juggle captions, posting times, and per-platform analytics across separate tools. SocialSync puts drafting, scheduling, automatic publishing, and engagement review in one place.',
-        'React, Node.js, Express, MongoDB',
-        NULL, NULL, NULL, TRUE
+        'React, Vite, Node.js, Express, MongoDB, Google Gemini',
+        NULL, 'https://github.com/anurag-joshi-1403/Social_Sync_Webapp', 'https://social-sync-webapp.vercel.app', TRUE
     ),
     (
         'Portfolio Website',
         'This site: a React and TypeScript frontend that reads all of its content from a Spring Boot REST API backed by MySQL, with a contact form that emails me directly.',
         'A resume PDF or a bare GitHub profile says little about how I build software. A working full-stack site shows it, and new projects go live with a database insert instead of a code change.',
-        'React, TypeScript, Spring Boot, Spring Data JPA, MySQL',
-        NULL, NULL, NULL, FALSE
+        'React, TypeScript, Spring Boot, Spring Data JPA, MySQL, Flyway',
+        NULL, 'https://github.com/anurag-joshi-1403/Anurag-Joshi-Portfolio', NULL, FALSE
     );
 
 INSERT INTO education (institution, degree, field, start_year, end_year, notes) VALUES
     ('Babu Banarasi Das University, Lucknow', 'B.Tech', 'Computer Science and Engineering', 2023, 2027, NULL);
 
--- No certifications yet: the Achievements section stays hidden while this table is empty (FR-ACH-1).
+-- Certifications are added by later migrations (V3 onward). While the table is empty, the
+-- Achievements section stays hidden (FR-ACH-1).
