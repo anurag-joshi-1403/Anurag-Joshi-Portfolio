@@ -1,0 +1,11 @@
+.grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* Two columns from tablet width up: cards stay readable and an even number of projects lines up. */
+@media (min-width: 48rem) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

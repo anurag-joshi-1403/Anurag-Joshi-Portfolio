@@ -1,0 +1,64 @@
+.layout {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* On glass, so the accent-coloured links keep 4.5:1 whatever glow is behind them. */
+.intro {
+  composes: glass from global;
+  display: grid;
+  align-content: start;
+  gap: var(--space-6);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+}
+
+.lead {
+  max-width: 34rem;
+  font-size: var(--text-lg);
+}
+
+.links {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.link,
+.pending {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 2.75rem;
+}
+
+.link {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.link svg,
+.pending svg {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.pending {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+@media (min-width: 64rem) {
+  .layout {
+    grid-template-columns: 2fr 3fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 30rem) {
+  .intro {
+    padding: var(--space-6) var(--space-4);
+  }
+}

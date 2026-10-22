@@ -1,0 +1,54 @@
+.layout {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.bio {
+  composes: glass from global;
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-lg);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-4);
+}
+
+.card {
+  composes: glass from global;
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+}
+
+.card h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+}
+
+.card h3 svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-accent);
+}
+
+.card p {
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 64rem) {
+  .layout {
+    grid-template-columns: 3fr 2fr;
+    align-items: stretch;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
