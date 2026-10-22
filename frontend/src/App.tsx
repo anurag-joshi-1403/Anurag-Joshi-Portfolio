@@ -1,39 +1,43 @@
+import { getCertifications } from './api/certifications'
+import { getProfile } from './api/profile'
 import { Footer } from './components/Footer'
 import { Navbar } from './components/Navbar'
-import { Section } from './components/Section'
-import styles from './App.module.css'
+import { useApi } from './hooks/useApi'
+import { About } from './sections/About'
+import { Achievements } from './sections/Achievements'
+import { Contact } from './sections/Contact'
+import { Education } from './sections/Education'
+import { Hero } from './sections/Hero'
+import { Projects } from './sections/Projects'
+import { Skills } from './sections/Skills'
 
-// Foundation step: section shells only. Each one is replaced by a real
-// section component (src/sections/) fed by the Spring Boot API in a later step.
+// All content comes from the Spring Boot API (FR-DATA-1). The profile is fetched once here
+// because the nav, hero, about, contact, and footer all use it.
 export default function App() {
+  const profile = useApi(getProfile)
+  const certifications = useApi(getCertifications)
+
+  const name = profile.state.status === 'success' ? profile.state.data.name : null
+  // FR-ACH-1: Achievements stays hidden until real certifications exist (or if they can't be loaded).
+  const certificationList = certifications.state.status === 'success' ? certifications.state.data : []
+  const showAchievements = certificationList.length > 0
+
   return (
     <>
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <Navbar />
+      <Navbar name={name} showAchievements={showAchievements} />
       <main id="main" tabIndex={-1}>
-        <section id="home" className={`container ${styles.hero}`} aria-labelledby="home-heading">
-          <h1 id="home-heading">Anurag Joshi</h1>
-          <p className={styles.placeholder}>Hero section — built in the frontend sections step.</p>
-        </section>
-        <Section id="about" title="About">
-          <p className={styles.placeholder}>About content will load from GET /api/profile.</p>
-        </Section>
-        <Section id="skills" title="Skills">
-          <p className={styles.placeholder}>Skills will load from GET /api/skills.</p>
-        </Section>
-        <Section id="projects" title="Projects">
-          <p className={styles.placeholder}>Projects will load from GET /api/projects.</p>
-        </Section>
-        <Section id="experience" title="Experience & Education">
-          <p className={styles.placeholder}>Education will load from GET /api/education.</p>
-        </Section>
-        <Section id="contact" title="Contact">
-          <p className={styles.placeholder}>The contact form will post to POST /api/contact.</p>
-        </Section>
+        <Hero profile={profile.state} onRetry={profile.retry} />
+        <About profile={profile.state} onRetry={profile.retry} />
+        <Skills />
+        <Projects />
+        <Education />
+        {showAchievements && <Achievements certifications={certificationList} />}
+        <Contact profile={profile.state} onRetry={profile.retry} />
       </main>
-      <Footer />
+      <Footer name={name} />
     </>
   )
 }
