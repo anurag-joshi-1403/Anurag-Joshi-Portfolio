@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.anuragjoshi.portfolio.service.ContactDeliveryException;
 import com.anuragjoshi.portfolio.service.ContentNotFoundException;
+import com.anuragjoshi.portfolio.service.RateLimitExceededException;
 
 /**
  * NFR-8: every failure becomes an RFC 9457 problem response with a human-readable {@code detail},
@@ -55,6 +56,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ContactDeliveryException.class)
     public ProblemDetail handleContactDelivery(ContactDeliveryException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
+    }
+
+    /** 429 with Retry-After (seconds) and a wait the visitor can act on. */
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<ProblemDetail> handleRateLimit(RateLimitExceededException ex) {
+        // Round up, so a client that waits exactly Retry-After seconds is never still blocked.
+        long seconds = Math.max(1, (ex.getRetryAfter().toMillis() + 999) / 1000);
+        long minutes = Math.max(1, (seconds + 59) / 60);
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.TOO_MANY_REQUESTS,
+                "You've sent several messages in a short time. Please try again in "
+                        + minutes + (minutes == 1 ? " minute." : " minutes."));
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header(HttpHeaders.RETRY_AFTER, String.valueOf(seconds))
+                .body(problem);
     }
 
     /** MySQL is down or unreachable: a query failed, or no connection was available to start a transaction. */
