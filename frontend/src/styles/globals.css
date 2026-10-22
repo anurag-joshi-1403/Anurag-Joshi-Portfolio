@@ -9,8 +9,8 @@
 }
 
 html {
-  /* Keeps section headings clear of the sticky navbar after an anchor jump. */
-  scroll-padding-top: calc(var(--nav-height) + var(--space-4));
+  /* Keeps section headings clear of the floating navbar after an anchor jump. */
+  scroll-padding-top: calc(var(--nav-height) + var(--nav-offset) + var(--space-4));
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -30,6 +30,22 @@ body {
   background-color: var(--color-bg);
   overflow-wrap: break-word;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Aurora: soft colour glows for the glass panels to blur. Pure CSS gradients, so there's
+   nothing to download, and it stays fixed while the glass scrolls over it. The first glow sits
+   behind the hero card, where the frosted effect matters most. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(38rem 30rem at 28% 38%, var(--aurora-1), transparent 70%),
+    radial-gradient(36rem 30rem at 92% 12%, var(--aurora-2), transparent 70%),
+    radial-gradient(44rem 34rem at 76% 90%, var(--aurora-3), transparent 70%),
+    radial-gradient(30rem 26rem at 6% 88%, var(--aurora-4), transparent 70%);
 }
 
 img,
@@ -80,6 +96,41 @@ a:hover {
   padding-inline: var(--gutter);
 }
 
+/*
+ * Frosted-glass panel. CSS Modules pull it in with `composes: glass from global;`
+ * so every panel shares one definition and its fallbacks.
+ */
+.glass {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+
+/* No blur support: a near-opaque surface keeps text readable without it. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background-color: var(--glass-bg-solid);
+  }
+}
+
+/* Visitors who ask for less transparency get solid panels. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background-color: var(--glass-bg-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* High contrast mode drops backgrounds and shadows: keep every panel outlined. */
+@media (forced-colors: active) {
+  .glass {
+    border-color: CanvasText;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -99,8 +150,8 @@ a:hover {
   z-index: 100;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
   font-weight: 600;
   text-decoration: none;
   transform: translateY(-200%);
@@ -108,5 +159,5 @@ a:hover {
 
 .skip-link:focus-visible {
   transform: none;
-  color: var(--color-on-accent);
+  color: var(--color-on-primary);
 }
